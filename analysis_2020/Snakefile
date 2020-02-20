@@ -4,13 +4,14 @@ GENOMES, = glob_wildcards("fna/{genome}.fna")
 
 localrules: all,  make_path, calc_complexity
 
+
+
 def aggregate_input(wildcards):
     return expand("Results/ortho/coreogs_aligned/{og}.fasta",
                 og=glob_wildcards(os.path.join("Results/ortho/coreogs/", "{og}.fasta")).og )
 
 rule all:
 	input: aggregate_input
-#        input: directory("Results/ortho/coreogs/")
 
 
 rule align_core:
@@ -18,7 +19,8 @@ rule align_core:
 		"Results/ortho/coreogs/{og}.fasta"
 	output:
 		"Results/ortho/coreogs_aligned/{og}.fasta"
-	shell:
+
+shell:
 		"scripts/./muscle -in {input} -out {output} -quiet"
 	
 checkpoint makeCoreOGfastas:

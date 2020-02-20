@@ -1,6 +1,4 @@
-setwd("/data7a/bio/operonTravel/salmonella/tmp/")
 
-library("seqinr")
 library("stringr")
 library("ape")
 library("phangorn")
@@ -9,16 +7,18 @@ library("abind")
 
 ### CORE GENES
 dist.list = list()
-FILES = list.files("coreogaligns/",pattern = ".*fasta")
+aligned_dir <- "Results/ortho/coreogs_aligned/"
+out_dir <- "Results/rdata/"
+
+FILES = list.files(aligned_dir,pattern = ".*fasta")
 FILES.count = length(FILES)
-FILES.count = 100
+#FILES.count = 2
 for(f in 1:FILES.count)
 {
   if(f%%100==0) print(f)
   tryCatch({
     name = sub(".fasta", "", FILES[f])
-    #print(name)
-    A = read.dna(paste0("coreogaligns/",FILES[f]), format = "fasta")
+    A = read.dna(paste0(aligned_dir,FILES[f]), format = "fasta")
     D = dist.dna(A, model="K80",pairwise.deletion=TRUE)
     #D = dist.ml(A,model="Blosum62")
     D = as.matrix(D)
@@ -28,14 +28,15 @@ for(f in 1:FILES.count)
     .order = order(rownames(D))
     D = D[.order,.order]
     #heatmap.2(as.matrix(D),  trace ="none", cexRow = 0.8, margins = c(6,12), cex = 0.8)
-    dist.list[[name]] = as.matrix(D)}, error=function(e){cat("ERROR in",name, "\n")})
+    dist.list[[name]] = as.matrix(D)},
+  error=function(e){cat("ERROR in",name, "\n")})
 }
-save(dist.list, file="dist.list.rdata")
 
 dists.3d <- abind(dist.list, along=3)
 dists.mean <- apply(dists.3d, c(1,2), mean)
 
-save(dists.mean, file="../core.dists.mean.nuc.rdata")
+system(paste("mkdir",out_dir))
+save(dist.list, dists.mean, file=paste0(out_dir,"core.dists.rdata"))
 
 hist((unlist(dists.mean)), col ="dodgerblue", breaks = 50)
 hist(log(unlist(dists.mean)), col ="dodgerblue")

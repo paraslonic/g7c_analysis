@@ -5,5 +5,5 @@ mkdir -p Results/ortho
 
 find faa -name 'Orthogroups.txt' -exec cp {} Results/ortho \; 
 find faa -name 'SingleCopyOrthogroups.txt' -exec cp {} Results/ortho \; 
-
+perl scripts/namedGroups2table.pl Results/ortho/Orthogroups.txt Results/ortho/
 
