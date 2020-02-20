@@ -4,10 +4,23 @@ GENOMES, = glob_wildcards("fna/{genome}.fna")
 
 localrules: all,  make_path, calc_complexity
 
-rule all:
-	input: 
-		directory("Results/ortho/coreogs/")
+def aggregate_input(wildcards):
+    return expand("Results/ortho/coreogs_aligned/{og}.fasta",
+                og=glob_wildcards(os.path.join("Results/ortho/coreogs/", "{og}.fasta")).og )
 
+rule all:
+	input: aggregate_input
+#        input: directory("Results/ortho/coreogs/")
+
+
+rule align_core:
+	input:
+		"Results/ortho/coreogs/{og}.fasta"
+	output:
+		"Results/ortho/coreogs_aligned/{og}.fasta"
+	shell:
+		"scripts/./muscle -in {input} -out {output} -quiet"
+	
 checkpoint makeCoreOGfastas:
 	input:
 		og="Results/ortho/Orthogroups.txt",
@@ -41,8 +54,10 @@ rule prokka:
 	threads: 4
 	conda: "envs/prokka.yaml"
 	shell:
-		"name=$(basename {input} .fna);"
-		"prokka --cpus {threads} --outdir {output} --force --prefix $name --locustag $name {input}"
+		"""
+		name=$(basename {input} .fna);
+		prokka --cpus {threads} --outdir {output} --force --prefix $name --locustag $name {input}
+		"""
 
 rule make_faa:
 	input:
@@ -51,5 +66,7 @@ rule make_faa:
 		"faa/{qu}.fasta"
 	conda: "envs/scripts.yaml"
 	shell:
-		"name=$(basename {input});"
-		"python3 scripts/GBfaa.py -gb  {input}/$name.gbk > {output}"
+		"""
+		name=$(basename {input})
+		python3 scripts/GBfaa.py -gb  {input}/$name.gbk > {output}
+		"""
