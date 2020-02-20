@@ -1,0 +1,55 @@
+configfile: 'config.yml'
+
+GENOMES, = glob_wildcards("fna/{genome}.fna")
+
+localrules: all,  make_path, calc_complexity
+
+rule all:
+	input: 
+		directory("Results/ortho/coreogs/")
+
+checkpoint makeCoreOGfastas:
+	input:
+		og="Results/ortho/Orthogroups.txt",
+		coreOg="Results/ortho/SingleCopyOrthogroups.txt",
+		ffns=expand("ffn/{qu}.fasta", qu=GENOMES)
+	output:
+		coreog=directory("Results/ortho/coreogs/")
+	shell:
+		"""
+		cat ffn/*.fasta > tmp/all_genes.fasta
+		mkdir -p Results/ortho/coreogs
+		perl scripts/splitToOg.pl Results/ortho/Orthogroups.txt tmp/all_genes.fasta Results/ortho/coreogs Results/ortho/SingleCopyOrthogroups.txt
+		"""		
+	
+
+rule orthofinder:
+	input: 
+		expand("faa/{qu}.fasta", qu=GENOMES)
+	output:
+		"Results/ortho/Orthogroups.txt"
+	threads: 4
+	conda: "envs/ortho.yaml"
+	log: "log_of.txt"
+	shell:
+		"bash scripts/run_orthofinder.sh {threads} > {log}"
+rule prokka:
+	input:
+		ancient("fna/{qu}.fna")
+	output:
+		directory("prokka/{qu}")
+	threads: 4
+	conda: "envs/prokka.yaml"
+	shell:
+		"name=$(basename {input} .fna);"
+		"prokka --cpus {threads} --outdir {output} --force --prefix $name --locustag $name {input}"
+
+rule make_faa:
+	input:
+		ancient("prokka/{qu}")
+	output:
+		"faa/{qu}.fasta"
+	conda: "envs/scripts.yaml"
+	shell:
+		"name=$(basename {input});"
+		"python3 scripts/GBfaa.py -gb  {input}/$name.gbk > {output}"

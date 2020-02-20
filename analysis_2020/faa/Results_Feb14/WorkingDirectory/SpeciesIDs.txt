@@ -1,0 +1,11 @@
+0: 10GB.fasta
+1: Alt63.fasta
+2: G10.fasta
+3: G13.fasta
+4: G8C.fasta
+5: GR10.fasta
+6: GR6.fasta
+7: N4G2.fasta
+8: N4Sz33.fasta
+9: St10.fasta
+10: St10y.fasta

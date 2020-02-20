@@ -1,0 +1,8 @@
+The flag 'directory' used in rule all is only valid for outputs, not inputs.
+localrules directive specifies rules that are not present in the Snakefile:
+	make_path
+	calc_complexity
+
+Building DAG of jobs...
+Updating job 0.
+Nothing to be done.

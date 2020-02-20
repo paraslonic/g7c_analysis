@@ -1,0 +1,13 @@
+	10GB	Alt63	G10	G13	G8C	GR10	GR6	N4G2	N4Sz33	St10	St10y
+OG0000088	10GB|6|hypothetical_protein|10GB_reoriented|2283|2501										
+OG0000089	10GB|21|hypothetical_protein|10GB_reoriented|9093|9302										
+OG0000090	10GB|44|[gene=gp39]_[protein=DNA_polymerase]|10GB_reoriented|26020|26991										
+OG0000091	10GB|60|[gene=gp53]_[protein=hypothetical_protein]|10GB_reoriented|49368|49538										
+OG0000092	10GB|81|hypothetical_protein|10GB_reoriented|70656|70949										
+OG0000093				G13|5|hypothetical_protein|G13_reoriented_TR|1717|1815							
+OG0000094				G13|71|[gene=gp61]_[protein=N-acetylmuramidase]|G13_reoriented_TR|58944|59042							
+OG0000095				G13|78|[gene=gp67]_[protein=putative_tail_protein]|G13_reoriented_TR|65575|65868							
+OG0000096								N4G2|43|[gene=gp37]_[protein=DNA_helicase]|N4G2-reoriented|21776|22003			
+OG0000097									N4Sz33|10|hypothetical_protein|N4Sz33-reoriented|3205|3564		
+OG0000098									N4Sz33|16|hypothetical_protein|N4Sz33-reoriented|5135|5365		
+OG0000099											St10y|56|[gene=gp50]_[protein=virion_RNA_polymerase]|St103y-end_set|45588|45815

@@ -1,0 +1,3 @@
+WorkflowError in line 1 of /data11/bio/PROJECTS/G7C/analysis_2020/Snakefile:
+Config file config.yml not found.
+  File "/data11/bio/PROJECTS/G7C/analysis_2020/Snakefile", line 1, in <module>

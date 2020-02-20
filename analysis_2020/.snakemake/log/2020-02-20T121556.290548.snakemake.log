@@ -1,0 +1,36 @@
+The flag 'directory' used in rule all is only valid for outputs, not inputs.
+localrules directive specifies rules that are not present in the Snakefile:
+	calc_complexity
+	make_path
+
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	makeCoreOGfastas
+	2
+
+[Thu Feb 20 12:15:56 2020]
+checkpoint makeCoreOGfastas:
+    input: Results/ortho/Orthogroups.txt, Results/ortho/SingleCopyOrthogroups.txt
+    output: Results/ortho/coreogs/
+    jobid: 1
+Downstream jobs will be updated after completion.
+
+Updating job 0.
+[Thu Feb 20 12:15:57 2020]
+Finished job 1.
+1 of 2 steps (50%) done
+
+[Thu Feb 20 12:15:57 2020]
+localrule all:
+    input: Results/ortho/coreogs/
+    jobid: 0
+
+[Thu Feb 20 12:15:57 2020]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: /data11/bio/PROJECTS/G7C/analysis_2020/.snakemake/log/2020-02-20T121556.290548.snakemake.log
