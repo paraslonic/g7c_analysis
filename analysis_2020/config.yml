@@ -1,2 +1,3 @@
 software:
 orthofinder.bin: '/data7a/bio/operonTravel/wave2_newOF/OrthoFinder-2.2.6/./orthofinder'
+iqtree.bin: '/data11/bio/Soft/iqtree-2.0-rc1-Linux/bin/./iqtree'

@@ -28,20 +28,25 @@ for(f in 1:n){
 C[is.na(C)] = 1
 Csp[is.na(Csp)] = 1
 View(C)
-rownames(C) = names(M.list)
+
+ot <- read.delim("Results/ortho/ortho_table.txt")
+ognames <- data.frame(og=gsub(":","",ot$id), name=ot$product)
+
+qu <- ognames[match(names(M.list),ognames$og),]
+
+
+rownames(C) = qu$name
 colnames(C) = rownames(C)
 rownames(Csp) = rownames(C)
 colnames(Csp) = rownames(C)
 
 
-# rownames(Csp) = gsub("]","",rownames(Csp))
-# colnames(Csp) = gsub("]","",colnames(Csp))
-
 pdf("chooseColors.pdf")
 
 myPalette <-  colorRampPalette(c("#e34a33", "#e34a33","#e34a33", "#ffeda0", "#3182bd"))(n = 200)
 heatmap.2(Csp, trace="none",  hclustfun = function(x) hclust(x, method = 'ward.D'), 
-          col =myPalette, cexRow = 0.5, cexCol = 0.5, dendrogram = "row")
+          col =myPalette, cexRow = 0.5, cexCol = 0.5, dendrogram = "row",
+          margins = c(14,14))
 
 
 myPalette <-  colorRampPalette(c("white","white","gray95",  "#3182bd"))(n = 200)
@@ -118,111 +123,4 @@ for(i in 1:n){
   }
 
 dev.off()
-
-
-# *** ---------------------------------------------------------------------
-
-getDist1234 = function(gene)
-{
-  d = M.list[[gene]] 
-  colnames(d) = gsub("\\s.+","", colnames(d))
-  colnames(d)[grepl("NC_015933", colnames(d))] = "G7C"
-  rownames(d) = colnames(d)
-  d1 = mean(unlist(d["10GB",c("G8C","G7C", "Alt63")]))
-  d2 = mean(unlist(d["10GB",c("N4G2", "N4Sz33")]))
-  d3 = mean(unlist(d["St10y",c("G8C","G7C", "Alt63")]))
-  d4 = mean(unlist(d["St10y",c("N4G2", "N4Sz33")]))
-  return(c(d1,d2,d3,d4))  
-}
-
-getDist1234. = function(gene)
-{
-  d = M.list[[gene]] 
-  colnames(d) = gsub("\\s.+","", colnames(d))
-  colnames(d)[grepl("NC_015933", colnames(d))] = "G7C"
-  rownames(d) = colnames(d)
-  d1 = mean(unlist(d["10GB",c("G8C")]))
-  d2 = mean(unlist(d["10GB",c("N4Sz33")]))
-  d3 = mean(unlist(d["St10y",c("G8C")]))
-  d4 = mean(unlist(d["St10y",c("N4Sz33")]))
-  return(c(d1,d2,d3,d4))  
-}
-
-
-L = list()
-for (g in as.character(core_gp$V1)){
-  print(g)
-  L[[g]] = getDist1234.(g)
-}
-
-dist.tab = do.call(rbind, L)
-
-write.table(dist.tab, "dist1234_krai.txt", row.names=FALSE, quote=FALSE)
-
-### 
-
-getDistAll.g8c = function(gene)
-{
-  d = M.list[[gene]] 
-  colnames(d) = gsub("\\s.+","", colnames(d))
-  colnames(d)[grepl("NC_015933", colnames(d))] = "G7C"
-  rownames(d) = colnames(d)
-  res = sapply(rownames(d), function(x){
-    d1 = mean(unlist(d[x,c("G8C")]))
-    return(d1)
-    })
-  return(res)  
-}
-
-getDistAll.g7c = function(gene)
-{
-  d = M.list[[gene]] 
-  colnames(d) = gsub("\\s.+","", colnames(d))
-  colnames(d)[grepl("NC_015933", colnames(d))] = "G7C"
-  rownames(d) = colnames(d)
-  res = sapply(rownames(d), function(x){
-    d1 = mean(unlist(d[x,c("G7C")]))
-    return(d1)
-  })
-  return(res)  
-}
-
-
-getDistAll.n4 = function(gene)
-{
-  d = M.list[[gene]] 
-  colnames(d) = gsub("\\s.+","", colnames(d))
-  colnames(d)[grepl("NC_015933", colnames(d))] = "G7C"
-  rownames(d) = colnames(d)
-  res = sapply(rownames(d), function(x){
-    d1 = mean(unlist(d[x,c("N4Sz33")]))
-    return(d1)
-  })
-  return(res)  
-}
-
-L = list()
-for (g in as.character(core_gp$V1)){
-  print(g)
-  L[[g]] = getDistAll.g7c(g)
-}
-
-dist.tab = do.call(rbind, L)
-write.table(dist.tab, "distAll_g7c.txt", row.names=FALSE, quote=FALSE)
-
-L = list()
-for (g in as.character(core_gp$V1)){
-  print(g)
-  L[[g]] = getDistAll.n4(g)
-}
-
-dist.tab = do.call(rbind, L)
-write.table(dist.tab, "distAll_n4.txt", row.names=FALSE, quote=FALSE)
-
-dist.tab = t(dist.tab)
-plot(log(dist.tab[4,]),type='l',ylim = c(0, -12))
-for (i in 1:nrow(dist.tab)){
-  lines(log(0.001+dist.tab[i,]), col = 1+i, lwd = 2)  
-}
-legend("top",row.names(dist.tab), col=1+1:nrow(dist.tab), lwd = 1)
 

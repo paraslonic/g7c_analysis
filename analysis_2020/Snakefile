@@ -2,25 +2,31 @@ configfile: 'config.yml'
 
 GENOMES, = glob_wildcards("fna/{genome}.fna")
 
-localrules: all,  make_path, calc_complexity
+#localrules: all,  make_path, calc_complexity
 
 
 
 def aggregate_input(wildcards):
-    return expand("Results/ortho/coreogs_aligned/{og}.fasta",
+    return expand("Results/ortho/coreogs_aligned/{og}.fasta.iqtree",
                 og=glob_wildcards(os.path.join("Results/ortho/coreogs/", "{og}.fasta")).og )
 
 rule all:
 	input: aggregate_input
 
+rule tree_for_core:
+	input:
+		"Results/ortho/coreogs_aligned/{og}.fasta"	
+	output:
+		"Results/ortho/coreogs_aligned/{og}.fasta.iqtree"
+	shell:
+		"{config['iqtree.bin']} {input} "
 
 rule align_core:
 	input:
 		"Results/ortho/coreogs/{og}.fasta"
 	output:
 		"Results/ortho/coreogs_aligned/{og}.fasta"
-
-shell:
+	shell:
 		"scripts/./muscle -in {input} -out {output} -quiet"
 	
 checkpoint makeCoreOGfastas:
@@ -36,7 +42,6 @@ checkpoint makeCoreOGfastas:
 		mkdir -p Results/ortho/coreogs
 		perl scripts/splitToOg.pl Results/ortho/Orthogroups.txt tmp/all_genes.fasta Results/ortho/coreogs Results/ortho/SingleCopyOrthogroups.txt
 		"""		
-	
 
 rule orthofinder:
 	input: 
