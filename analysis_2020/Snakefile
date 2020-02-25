@@ -19,7 +19,7 @@ rule tree_for_core:
 	output:
 		"Results/ortho/coreogs_aligned/{og}.fasta.iqtree"
 	shell:
-		"{config['iqtree.bin']} {input} "
+		"{config[iqtree.bin]} -s {input}"
 
 rule align_core:
 	input:
