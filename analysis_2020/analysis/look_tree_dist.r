@@ -18,10 +18,9 @@ M <- as.matrix(M)
 ot <- read.delim("Results/ortho/ortho_table.txt")
 ognames <- data.frame(og=gsub(":","",ot$id), name=ot$product)
 
-qu <- ognames[match(names(tree.list),ognames$og),]
-all(names(tree.list) == qu$og)
+qu <- ognames[match(rownames(M),ognames$og),]
+all(rownames(M) == qu$og)
 rownames(M) <- qu$name
-colnames(M) <- qu$name
 pheatmap(M, trace = "none", fontsize_row = 6,fontsize_col = 6)
 
 pheatmap(Muu)
